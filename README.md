@@ -1,21 +1,83 @@
-# ⚡ ActivePulse AI - Smart Fitness Tracker & AI Coach
+# AI-Driven-Fitness-Tracker
 
-ActivePulse AI is a modern, responsive full-stack **Microservices** application that transforms standard fitness logs into intelligent, actionable health analytics. Instead of just storing raw data, this platform utilizes advanced AI engineering pipelines to deliver customized coaching plans, performance analysis, and safety precautions.
+A full-stack fitness application built using **Spring Boot Microservices**, **React**, **MySQL**, **Keycloak**, **RabbitMQ**, **Eureka Service Discovery**, **Spring Cloud Gateway**, and an **AI-powered recommendation service**.
 
-## 🤖 AI Engineering & Architecture Features
-* **Structured AI Response Pipelines:** Integrates with the **Google Gemini API** using advanced prompt engineering to return deterministic, validated JSON structures.
-* **Asynchronous Event-Driven AI Processing:** Uses **RabbitMQ** message queues to decouple the core activity tracking services from heavy AI processing tasks.
-* **Microservices Orchestration:** Built with a distributed architecture managed by a **Netflix Eureka Discovery Server** for seamless service registry.
-* **Dribbble-Inspired UI Framework:** Designed with responsive, modern **Material UI (MUI)** layout card configurations matching modern dashboard aesthetics.
+The application allows users to manage their fitness activities such as **Running, Cycling, and Swimming** and receive personalized AI-generated recommendations based on their activity data.
 
-## 🛠️ The Tech Stack
-* **Frontend:** React.js, Material UI (MUI), Framer Motion, Redux (Auth State)
-* **Backend:** Java, Spring Boot, Spring Cloud Eureka, Spring AMQP (RabbitMQ)
-* **Databases & Infrastructure:** PostgreSQL / MongoDB, RabbitMQ Broker
-* **Security:** Keycloak OAuth2 / OpenID Connect
+---
 
-## ⚙️ How the AI Pipeline Works
-1. **Log Activity:** The user submits a workout (Running, Swimming, Cycling) via the React frontend.
-2. **Event Dispatched:** The `ActivityService` saves the raw data and fires a message payload into the `activity.queue` on **RabbitMQ**.
-3. **AI Processing:** The `Aiservice` consumes the message asynchronously, triggers a case-normalized context prompt builder, and streams it to **Gemini**.
-4. **Structured Mapping:** The system sanitizes the raw markdown response text, converts it into an internal Java data tree using Jackson `ObjectMapper`, and saves the generated recommendation back to the database.
+## 🚀 Features
+
+- 🔐 User authentication and authorization using Keycloak
+- 👤 User management
+- 🏃 Fitness activity tracking
+- 🏊 Support for Running, Cycling, and Swimming
+- 🤖 AI-powered fitness recommendations
+- 📨 Asynchronous communication using RabbitMQ
+- 🔍 Service discovery using Eureka
+- 🌐 API Gateway for routing requests
+- 🗄️ MySQL database for persistent storage
+- 🔒 JWT-based API security
+- ⚡ REST APIs using Spring Boot
+- 🧩 Microservices architecture
+
+---
+
+# 🏗️ Architecture
+
+```text
+                         ┌─────────────────────┐
+                         │     React Frontend  │
+                         │     localhost:5173  │
+                         └──────────┬──────────┘
+                                    │
+                                    │ HTTP / JWT
+                                    ▼
+                         ┌─────────────────────┐
+                         │   Spring Cloud      │
+                         │      Gateway        │
+                         │     Port: 8083      │
+                         └──────────┬──────────┘
+                                    │
+                  ┌─────────────────┼─────────────────┐
+                  │                 │                 │
+                  ▼                 ▼                 ▼
+          ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+          │ User Service │  │   Activity   │  │  AI Service  │
+          │              │  │   Service    │  │              │
+          │ Port: 8080   │  │ Port: 8081   │  │ Port: 8082   │
+          └──────┬───────┘  └──────┬───────┘  └──────┬───────┘
+                 │                 │                  │
+                 ▼                 ▼                  ▼
+          ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+          │    MySQL     │  │    MySQL     │  │    MySQL     │
+          │   user_db    │  │  activity_db │  │recommendations│
+          │              │  │              │  │     _db      │
+          └──────────────┘  └──────────────┘  └──────────────┘
+                                    │
+                                    │ RabbitMQ
+                                    ▼
+                           ┌─────────────────┐
+                           │    RabbitMQ     │
+                           │ activity.queue  │
+                           └────────┬────────┘
+                                    │
+                                    ▼
+                           ┌─────────────────┐
+                           │    AI Service   │
+                           │ Gemini AI / AI  │
+                           │ Recommendation  │
+                           └─────────────────┘
+
+
+              ┌──────────────────────────────┐
+              │       Eureka Server         │
+              │      Service Discovery      │
+              │        Port: 8761           │
+              └──────────────────────────────┘
+
+              ┌──────────────────────────────┐
+              │          Keycloak            │
+              │ Authentication & JWT         │
+              │        Port: 8084            │
+              └──────────────────────────────┘
