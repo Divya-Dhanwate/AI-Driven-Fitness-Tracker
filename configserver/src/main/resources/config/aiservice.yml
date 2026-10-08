@@ -1,0 +1,52 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: aiservice
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/recommendations_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: prec12345
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    exchange:
+      name: fitness_exchange
+    routing:
+      key: activity_tracking
+    queue:
+      name: activity.queue
+    listener:
+      simple:
+        default-requeue-rejected: false
+        retry:
+          enabled: true
+          initial-interval: 3s
+          max-attempts: 3
+          multiplier: 2
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+
+gemini:
+  api:
+    uri: https://generativelanguage.googleapis.com
+    key: ${GEMINI_API_KEY}
+    model: gemini-flash-latest-lite
+    fallback-model: gemini-3.1-flash-lite

@@ -1,0 +1,20 @@
+package com.fitness.gateway.user;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+@Data
+public class RegisterRequest {
+    @NotBlank(message = "email is required")
+    @Email(message = "Invalid email formate")
+    String  email;
+   private String keycloakId;
+    @NotBlank(message = "password is required")
+     @Size(min=6, message = "password must have  atleast of 6 characters")
+    String password;
+    String firstName;
+    String lastName;
+
+   }
